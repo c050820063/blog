@@ -1,10 +1,11 @@
 [hexo官网](https://hexo.io/)
+[blog主页](https://c050820063.github.io./)
 
 ## 基本操作
 
 - 创建文章
 ```
-  $ hexo new [layout] <title>
+  $ hexo new "My New Post"
 ```
 
 - 生成文件
@@ -24,6 +25,7 @@
 
 - 一键部署
 ```
+  $ hexo generate
   $ hexo deploy
 ```
 

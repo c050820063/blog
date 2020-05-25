@@ -22,7 +22,7 @@ const name:string = 'joke'
 ```
 const age:number = 16
 const stature:number = 178.5
-const 
+const nan:number = NaN
 ```
 
 ### boolean
