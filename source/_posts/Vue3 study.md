@@ -11,64 +11,463 @@ tags:
 让我们通过一个用了新的组件 API 的组件的简单示例，来了解其工作原理。
 
 ``` bash
-<template>
-  <button @click="increment">
-    Count is: {{ count }}, double is {{ double }}, click to increment.
-  </button>
-</template>
-
-<script>
-import { ref, computed, onMounted } from 'vue'
-
+import { reactive, watch, toRefs, computed, watchEffect } from 'vue'
 export default {
-  setup() {
-    const count = ref(0)
-    const double = computed(() => count.value * 2)
-
-    function increment() {
-      count.value++
+  setup () {
+    const state = reactive({
+      count: 0,
+      doubleCount: computed(() => {
+        return state.count * 2
+      }),
+      a: 1,
+      watchCount: 0,
+      watchCount1: 1
+    })
+    watchEffect(() => {
+      console.log('watchEffect', state.count, state.a)
+    }, {
+      onTrack() {
+        console.log('onTrack调用')   // 当反应性属性或ref作为依赖项被跟踪时
+      },
+      onTrigger() {
+        console.log('ontrigger调用') // 当观察程序回调由依赖项的变异触发时
+      }
+    })
+    watch(() => {
+      return [state.watchCount, state.watchCount1]
+    }, (val, prev) => {
+      console.log(val, prev)
+    })
+    setTimeout(() => {
+      state.watchCount++
+    }, 1000)
+    const addRef = () => {
+      state.count++
     }
-
-    onMounted(() => console.log('component mounted!'))
-
     return {
-      count,
-      double,
-      increment
+      // 将代理对象转换为纯对象。并对其每个key做包装，包装为ref
+      ...toRefs(state),
+      addRef,
     }
   }
 }
-</script>
-
 ```
 
-- import { ref, computed, onMounted } from 'vue'
+### setup
 
-需要使用 ref 创建响应性引用，用 computed 建立计算属性，并用 onMounted 访问安装的生命周期 hook
+setup() 函数是 Vue3 中，专门为组件提供的新属性。它为我们使用 vue3 的 Composition API 新特性提供了统一的入口。
 
-- setup 是用来干嘛的呢？
+- 执行时机
 
-简而言之，它只是一个将属性和函数返回到模板的函数而已。我们在这里声明所有响应性属性、计算属性、观察者和生命周期 hook，然后将它们返回，以便可以在模板中使用它们。
+setup 函数会在 beforeCreate 之后、created 之前执行
 
-我们不从 setup 函数返回的内容在模板中将会不可用。
+- 接收 props 数据
 
-- const count = ref(0)
-
-根据上面的内容，我们声明了带有 ref 函数的名为 count 的响应属性。它可以包装任何原语或对象并返回其响应性引用。传递的元素的值将会保留在所创建引用的 value 属性中。例如，如果你想访问 count 引用的值，则需要明确要求 count.value。
+1. 在 props 中定义当前组件允许外界传递过来的参数名称：
+``` bash
+props: {
+  p1: String
+}
+```
+2. 通过 setup 函数的第一个形参，接收 props 数据：
 
 ``` bash
-const double = computed(() => count.value * 2)
-
-function increment() {
-  count.value++
+setup(props) {
+  console.log(props.p1)
 }
 ```
 
-这个是声明计算属性 computed
+- context
+setup 函数的第二个形参是一个上下文对象，这个上下文对象中包含了一些有用的属性，这些属性在 vue 2.x 中需要通过 this 才能访问到，在 vue 3.x 中，它们的访问方式如下：
 
-- onMounted(() => console.log('component mounted!'))
+``` bash
+const MyComponent = {
+  setup(props, context) {
+    context.attrs
+    context.slots
+    context.parent
+    context.root
+    context.emit
+    context.refs
+  }
+}
+```
+注意：在 setup() 函数中无法访问到 this
 
-这个是访问生命周期 hook
+### reactive
+reactive() 函数接收一个普通对象，返回一个响应式的数据对象。
+
+- 基本语法
+等价于 vue 2.x 中的 Vue.observable() 函数，vue 3.x 中提供了 reactive() 函数，用来创建响应式的数据对象，基本代码示例如下：
+
+``` bash
+import { reactive } from 'vue'
+ 
+// 创建响应式数据对象，得到的 state 类似于 vue 2.x 中 data() 返回的响应式对象
+const state = reactive({ count: 0 })
+```
+
+- 定义响应式数据供 template 使用
+1. 按需导入 reactive 函数：
+``` bash
+import { reactive } from 'vue'
+```
+
+2. 在 setup() 函数中调用 reactive() 函数，创建响应式数据对象：
+``` bash
+setup() {
+     // 创建响应式数据对象
+ const state = reactive({count: 0})
+ 
+     // setup 函数中将响应式数据对象 return 出去，供 template 使用
+ return state
+}
+```
+3. 在 template 中访问响应式数据：
+
+``` bash
+<p>当前的 count 值为：{{count}}</p>
+```
+
+### ref
+
+- 基本语法
+ref() 函数用来根据给定的值创建一个响应式的数据对象，ref() 函数调用的返回值是一个对象，这个对象上只包含一个 .value 属性：
+``` bash
+import { ref } from 'vue'
+ 
+// 创建响应式数据对象 count，初始值为 0
+const count = ref(0)
+ 
+// 如果要访问 ref() 创建出来的响应式数据对象的值，必须通过 .value 属性才可以
+console.log(count.value) // 输出 0
+// 让 count 的值 +1
+count.value++
+// 再次打印 count 的值
+console.log(count.value) // 输出 1
+```
+
+- 在 template 中访问 ref 创建的响应式数据
+
+1. 在 setup() 中创建响应式数据：
+``` bash
+import { ref } from '@vue/composition-api'
+ 
+setup() {
+const count = ref(0)
+  return {
+    count,
+    name: ref('zs')
+  }
+}
+```
+
+2. 在 template 中访问响应式数据：
+``` bash
+<template>
+ <p>{{count}} --- {{name}}</p>
+</template>
+```
+
+3. 在 reactive 对象中访问 ref 创建的响应式数据
+当把 ref() 创建出来的响应式数据对象，挂载到 reactive() 上时，会自动把响应式数据对象展开为原始的值，不需通过 .value 就可以直接被访问，例如：
+``` bash
+const count = ref(0)
+const state = reactive({
+  count
+})
+ 
+console.log(state.count) // 输出 0
+state.count++            // 此处不需要通过 .value 就能直接访问原始值
+console.log(count)       // 输出 1
+```
+
+- 注意：新的 ref 会覆盖旧的 ref，示例代码如下：
+``` bash
+// 创建 ref 并挂载到 reactive 中
+const c1 = ref(0)
+const state = reactive({
+  c1
+})
+ 
+// 再次创建 ref，命名为 c2
+const c2 = ref(9)
+// 将 旧 ref c1 替换为 新 ref c2
+state.c1 = c2
+state.c1++
+ 
+console.log(state.c1) // 输出 10
+console.log(c2.value) // 输出 10
+console.log(c1.value) // 输出 0
+```
+
+### isRef
+isRef() 用来判断某个值是否为 ref() 创建出来的对象；应用场景：当需要展开某个可能为 ref() 创建出来的值的时候，例如：
+``` bash
+import { isRef } from '@vue/composition-api'
+ 
+const unwrapped = isRef(foo) ? foo.value : foo
+```
+
+### toRefs
+toRefs() 函数可以将 reactive() 创建出来的响应式对象，转换为普通的对象，只不过，这个对象上的每个属性节点，都是 ref() 类型的响应式数据，最常见的应用场景如下：
+``` bash
+
+import { toRefs } from '@vue/composition-api'
+ 
+setup() {
+    // 定义响应式数据对象
+    const state = reactive({
+      count: 0
+    })
+    
+    // 定义页面上可用的事件处理函数
+    const increment = () => {
+      state.count++
+    }
+    
+    // 在 setup 中返回一个对象供页面使用
+    // 这个对象中可以包含响应式的数据，也可以包含事件处理函数
+    return {
+      // 将 state 上的每个属性，都转化为 ref 形式的响应式数据
+      ...toRefs(state),
+      // 自增的事件处理函数
+      increment
+    }
+}
+```
+
+页面上可以直接访问 setup() 中 return 出来的响应式数据：
+
+``` bash
+<template>
+  <div>
+    <p>当前的count值为：{{count}}</p>
+    <button @click="increment">+1</button>
+  </div>
+</template>
+```
+
+### computed
+computed()函数用来创建计算属性，返回的是个ref实例
+
+- 只读属性
+``` bash
+template>
+  <div class="wrapper">
+      <p>count:{{refCount}}</p>
+      <p>计算属性：{{computedCount}}</p>
+      <button @click="refCount+=1">+1</button>
+  </div>
+</template>
+
+<script>
+import { ref,computed } from "@vue/composition-api";
+export default {
+  setup(){
+      const refCount = ref(0)
+
+      const computedCount = computed(()=> refCount.value+1)
+
+  		//   computedCount=2
+      return {
+          refCount,
+          computedCount
+      }
+  },
+}
+</script>
+```
+
+- 可读可写
+``` bash
+<template>
+  <div class="wrapper">
+    <p>count:{{refCount}}</p>
+    <p>计算属性：{{computedCount}}</p>
+    <button @click="refCount+=1">+1</button>
+  </div>
+</template>
+
+<script>
+import { ref, computed } from "@vue/composition-api";
+export default {
+  setup() {
+    const refCount = ref(0);
+
+    //   const computedCount = computed(()=> refCount.value+1)
+
+    //   computedCount=2
+
+    const computedCount = computed({
+      get: () => refCount.value + 1,
+      set: a => {
+        refCount.value = a + 112;
+      }
+    });
+    computedCount.value = 33;
+    return {
+      refCount,
+      computedCount
+    };
+  },
+};
+</script>
+```
+
+### watch
+
+监视数据变化，做响应处理。组件创建，默认会执行一次，可配置项
+
+- 基本用法
+
+``` bash
+import { watch,ref, set } from "@vue/composition-api";
+export default {
+  setup(){
+    const refCount = ref(0)
+
+    watch(()=>console.log(refCount.value))
+
+    setTimeout(()=>{
+      refCount.value += 2;
+    },1000)
+  },
+}
+```
+
+- 监听指定数据源
+ref
+``` bash
+const count = ref(2)
+watch(count,(count,oldCount)=>{
+  console.log(count,oldCount)
+})
+setTimeout(() => {
+  count.value += 2;
+}, 1000);
+// 2 undefined
+// 4 2
+```
+reactive
+``` bash
+setup() {
+  const state = reactive({ count: 0 });
+  watch(() => state.count, (count, oldCount) => console.log(count, oldCount));
+  setTimeout(() => {
+    state.count += 2;
+  }, 1000);
+},
+// 0 undefined
+// 2 0
+----------------------------------------
+watch(
+  () => state.count,
+  (count, oldCount) =>{ console.log(count, oldCount)},
+  {lazy:true,} //组件第一次创建不调用
+);
+```
+
+- 监视多个数据源
+ref
+``` bash
+const count = ref(0)
+const name = ref('yp1')
+
+watch(
+  [count,name],
+  ([count,name],[oldCount,oldName])=>{
+    console.log(count)
+    console.log(name)
+    console.log('------------')
+    console.log(oldCount)
+    console.log(oldName)
+  },
+  {
+    lazy:true
+  }
+)
+setTimeout(()=>{
+  count.value++
+  name.value = "yp2"
+})
+// 1
+// yp2
+// ---------------------
+// 0
+// yp1
+```
+
+reactive
+``` bash
+const state = reactive({count:0,name:'yp1'})
+
+watch(
+  [()=>state.count,()=>state.name],
+  ([count,name],[oldCount,oldName])=>{
+    console.log(count)
+    console.log(name)
+    console.log("---------------------")
+    console.log(oldCount)
+    console.log(oldName)
+  },
+  {
+    lazy: true
+  }
+)
+setTimeout(()=>{
+  state.count++
+  state.name = "yp2"
+})
+// 1
+// yp2
+// ---------------------
+// 0
+// yp1
+```
+
+- 取消监视
+在setup()函数内创建的watch监视，会在当前组件被销毁的时候自动停止。watch的返回值调用
+两秒内点击按钮，取消了watch监听，可查 console
+
+``` bash
+<template>
+  <div class="wrapper">
+    <div>{{count}}</div>
+    <button @click="stopwatch">stop</button>
+    
+  </div>
+</template>
+
+<script>
+import { watch, ref, set, reactive } from "@vue/composition-api";
+export default {
+  setup() {
+    const count = ref(0)
+
+    const stop = watch(()=>{
+      console.log("监听到watch的变化"),
+      console.log(count.value)
+    })
+
+    setTimeout(() => {
+        count.value += 2
+    }, 2000);
+
+    const stopwatch = ()=>{
+      stop()
+    }
+
+    return {
+      count,
+      stopwatch
+    }
+  },
+};
+</script>
+```
+
+[参考](https://blog.csdn.net/weixin_44420276/article/details/101621169)
 
 ## 用组件 API 进行代码重用
 
