@@ -10,7 +10,7 @@ tags:
 2. npm init -y
 3. tsc --init
 4. npm i -D @types/node
-
+<!-- more -->
 ## 基础类型定义
 
 ### string

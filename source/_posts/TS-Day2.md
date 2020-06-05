@@ -11,6 +11,7 @@ tags:
     return a + b
   }
 ```
+<!-- more -->
 - 固定某些参数 ?
 ``` bash
   function add(a:number, b:number, c:?number): number {

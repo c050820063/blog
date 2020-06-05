@@ -14,7 +14,7 @@
 ```
 
 - 生成本地服务器
-1. 安装hexo-server 
+1. 安装hexo-server
 ```
   npm install hexo-server --save
 ```

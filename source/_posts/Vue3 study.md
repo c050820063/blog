@@ -7,7 +7,7 @@ tags:
 ## 组件 API（Composition API）
 
 组件 API 旨在通过将组件属性中当前可用的机制公开为 JavaScript 函数来解决这个问题。 Vue 核心团队将组件 API 描述为 “一组基于函数的附加 API，可以灵活地组合组件逻辑。” 用组件 API 编写的代码更具有可读性，并且其背后没有任何魔力，因此更易于阅读和学习。
-
+<!-- more -->
 让我们通过一个用了新的组件 API 的组件的简单示例，来了解其工作原理。
 
 ``` bash
@@ -151,7 +151,7 @@ console.log(count.value) // 输出 1
 
 1. 在 setup() 中创建响应式数据：
 ``` bash
-import { ref } from '@vue/composition-api'
+import { ref } from 'vue'
  
 setup() {
 const count = ref(0)
@@ -204,7 +204,7 @@ console.log(c1.value) // 输出 0
 ### isRef
 isRef() 用来判断某个值是否为 ref() 创建出来的对象；应用场景：当需要展开某个可能为 ref() 创建出来的值的时候，例如：
 ``` bash
-import { isRef } from '@vue/composition-api'
+import { isRef } from 'vue'
  
 const unwrapped = isRef(foo) ? foo.value : foo
 ```
@@ -213,7 +213,7 @@ const unwrapped = isRef(foo) ? foo.value : foo
 toRefs() 函数可以将 reactive() 创建出来的响应式对象，转换为普通的对象，只不过，这个对象上的每个属性节点，都是 ref() 类型的响应式数据，最常见的应用场景如下：
 ``` bash
 
-import { toRefs } from '@vue/composition-api'
+import { toRefs } from 'vue'
  
 setup() {
     // 定义响应式数据对象
@@ -262,7 +262,7 @@ template>
 </template>
 
 <script>
-import { ref,computed } from "@vue/composition-api";
+import { ref,computed } from "vue";
 export default {
   setup(){
       const refCount = ref(0)
@@ -290,7 +290,7 @@ export default {
 </template>
 
 <script>
-import { ref, computed } from "@vue/composition-api";
+import { ref, computed } from "vue";
 export default {
   setup() {
     const refCount = ref(0);
@@ -322,7 +322,7 @@ export default {
 - 基本用法
 
 ``` bash
-import { watch,ref, set } from "@vue/composition-api";
+import { watch,ref, set } from "vue";
 export default {
   setup(){
     const refCount = ref(0)
@@ -440,7 +440,7 @@ setTimeout(()=>{
 </template>
 
 <script>
-import { watch, ref, set, reactive } from "@vue/composition-api";
+import { watch, ref, reactive } from "vue";
 export default {
   setup() {
     const count = ref(0)
@@ -466,8 +466,107 @@ export default {
 };
 </script>
 ```
+- watch 清除无效的异步
+当watch监视的值发生变化的时候，或者watch本身被stop()之后，我们希望能够清除那些无效的异步任务，此时，watch回调中提供一个cleanup registrator function来执行清除的工作，
 
-[参考](https://blog.csdn.net/weixin_44420276/article/details/101621169)
+eg watch 被重复执行了 或者被强制stop
+
+实际场景一：打开a.html 会执行a.html的页面的3个ajax请求；但是在有两个ajax请求还没有发出去的时候，用户打开b.html，那剩下的两个请求我就不需要再接着请求了
+
+实际场景二：输入框按键输值请求
+
+``` bash
+<template>
+  <div>
+    <input type="text" v-model="kw">
+  </div>
+</template>
+
+<script>
+import { ref, watch } from "@vue/composition-api";
+export default {
+  name: "",
+  setup() {
+    const kw = ref("");
+
+    const asyncprint = val => {
+      return setTimeout(() => {
+        console.log(val);
+      }, 1000);
+    };
+
+    watch(
+      kw,
+      (kw, oldkw, callback) => {
+        const timeId = asyncprint(kw);
+        
+        callback(()=>clearTimeout(timeId));
+      },
+      { lazy: true }
+    );
+
+    return {
+      kw
+    };
+  },
+};
+</script>
+```
+
+## LifeCycle Hooks
+
+vue2生命周期 | vue3生命周期
+-|-
+beforeCreate | setup |
+created | setup |
+beforeMount | onBeforeMount |
+mounted | onMounted |
+beforeUpdate | onBeforeUpdate |
+updated | onUpdated |
+beforeDestory | onBeforeDestory |
+destroyed | onUnmounted |
+errorCaptured | onErrorCaptured |
+
+- 建议异步请求，在onMounted()/mounted()
+
+``` bash
+import { onBeforeMount,onMounted, } from "@vue/composition-api";
+
+setup(){
+
+    onBeforeMount(()=>{
+        console.log("onBeforeMount")
+    });
+    onMounted(()=>{
+        console.log("onMounted")
+    })
+    
+}
+```
+
+## provide & inject
+- 共享普通数据
+祖组件
+``` bash
+import { provide } from '@vue/composition-api'
+
+setup(){
+  provide('themeColor','red')  // 键值
+},
+```
+
+孙组件
+``` bash
+import { inject } from '@vue/composition-api'
+
+setup(){
+  const color = inject('themeColor');
+
+  return {
+      color: color,
+  }
+},
+```
 
 ## 用组件 API 进行代码重用
 
@@ -570,7 +669,7 @@ app.mount('#app')
 
 Vue3 每个配置都限于使用 createApp 定义的某个 Vue 程序,它可以使你的代码更易于理解，并且不易出现由第三方插件引发的意外问题。Vue2中，如果某些第三方解决方案正在修改 Vue 对象，那么它可能会以意想不到的方式（尤其是全局混合）影响你的程序，而 Vue 3 则没有这个问题。
 
-[more](https://github.com/vuejs/rfcs/pull/29)
+[参考](https://github.com/vuejs/rfcs/pull/29)
 
 ## 片段（Fragments）
 Vue 3 中添加了片段功能
@@ -702,5 +801,6 @@ const MyDirective = {
 }
 ```
 
-[参考](https://segmentfault.com/a/1190000020933028)
 
+[参考](https://blog.csdn.net/weixin_44420276/article/details/101621169)
+[参考](https://segmentfault.com/a/1190000020933028)

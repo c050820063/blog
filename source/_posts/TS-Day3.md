@@ -6,6 +6,7 @@ tags:
 
 ## 类
 1. 声明与创建
+<!-- more -->
 ``` bash
 class Person {
   public sex: string
