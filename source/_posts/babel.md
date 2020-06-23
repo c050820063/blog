@@ -4,7 +4,7 @@ date: 2020-06-17 16:18:58
 tags:
 ---
 
-(参考)[https://juejin.im/post/5e477139f265da574c566dda]
+[参考](https://juejin.im/post/5e477139f265da574c566dda)
 
 ### @babel/core
 Babel的核心模块
