@@ -46,8 +46,8 @@ if (/Android/gi.test(navigator.userAgent)) {
 }
 ```
 
-Q: 安卓webView5.1.1系统白屏 提示loading chunk {n} failed
-A：部分包不兼容，进行降级处理
+Q: 安卓webView5.1.1系统白屏
+A：第三方包es6语法未转换 使用transpileDependencies
 
 Q: 弹窗蒙版穿透(Vue)
 A：内容不可滑动 @touchmove.prevent 内容可滑动 @touchmove.self.prevent
