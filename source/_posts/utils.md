@@ -5,6 +5,7 @@ tags:
 ---
 
 ### 实现一个可以拖拽的DIV
+<!-- more -->
 js 版
 ``` bash
 <div id="xxx"></div>
