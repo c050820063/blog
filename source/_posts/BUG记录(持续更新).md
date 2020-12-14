@@ -51,3 +51,6 @@ A：第三方包es6语法未转换 使用transpileDependencies
 
 Q: 弹窗蒙版穿透(Vue)
 A：内容不可滑动 @touchmove.prevent 内容可滑动 @touchmove.self.prevent
+
+Q: IOS13.4以下、部分安卓、chrome81以下版本拍照后图片会旋转
+A：FIX：https://juejin.cn/post/6844904168075821069
