@@ -17,7 +17,6 @@ xxx.addEventListener('mousedown',function(e){
   dragging = true
   position = [e.clientX, e.clientY]
 })
-<!-- more -->
 
 document.addEventListener('mousemove', function(e){
   if(dragging === false) return null
