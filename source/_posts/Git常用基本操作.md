@@ -4,7 +4,6 @@ date: 2020-11-24 10:32:02
 tags:
 ---
 
-[参考](https://www.jianshu.com/p/686b61c4a43d)
 ### 基本操作
 初始化本地仓库
 
@@ -280,3 +279,5 @@ git tag
 ``` bash
 git push --tag
 ```
+
+[参考](https://www.jianshu.com/p/686b61c4a43d)

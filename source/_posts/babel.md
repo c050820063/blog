@@ -4,8 +4,6 @@ date: 2020-06-17 16:18:58
 tags:
 ---
 
-[参考](https://juejin.im/post/5e477139f265da574c566dda)
-
 ### @babel/core
 Babel的核心模块
 - 安装
@@ -287,3 +285,5 @@ module.exports = { presets }
 - babel/cli 允许我们从终端运行Babel
 - envpreset 只包含我们使用的功能的转换,实现我们的目标浏览器中缺少的功能
 - @babel/polyfill实现所有新的JS功能, 为目标浏览器引入缺少的环境(但是Babel7.4.0以上推荐使用corejs)
+
+[参考](https://juejin.im/post/5e477139f265da574c566dda)

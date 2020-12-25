@@ -800,6 +800,42 @@ const MyDirective = {
   unmounted() {}
 }
 ```
+## 挂载原型
+
+- Vue2
+``` bash
+import Vue from 'vue'
+
+Vue.prototype.xxx = xxx
+```
+
+-Vue3
+``` bash
+app.config.globalProperties.xxx = xxx
+```
+
+## 渲染组件
+
+- Vue2
+``` bash
+import Vue from 'vue'
+
+const Component = Vue.extend(component)
+new Component({
+  el: document.createElement('div')
+})
+document.body.appendChild($vm.$el)
+```
+
+-Vue3
+``` bash
+import { createVNode, render } from 'vue'
+
+const div = document.createElement('div')
+const $vm = createVNode(AlertComponent)
+$vm.appContext = Vue.appContext
+render($vm, div)
+```
 
 
 [参考](https://blog.csdn.net/weixin_44420276/article/details/101621169)
