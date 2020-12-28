@@ -241,3 +241,67 @@ Function.prototype.mybind = function(context, ...args) {
 
 ``` -->
 
+
+
+### 加减乘除
+``` bash
+// 获取小数个数
+function getDecimalsLength (val) {
+  let curVal
+  try {
+    curVal = val.toString().split('.')[1].length
+  } catch (f) {
+    curVal = 0
+  }
+  return curVal
+}
+
+// 浮点数相加
+export function MathAdd (a, b) {
+  if (!a && !b) return '0'
+  let e
+  let c = getDecimalsLength(a)
+  let d = getDecimalsLength(b)
+  return (
+    (e = Math.pow(10, Math.max(c, d))),
+    (MathMul(a, e) + MathMul(b, e)) / e
+  )
+}
+
+// 浮点数相减
+export function MathSub (a, b) {
+  if (!a && !b) return '0'
+  let e
+  let c = getDecimalsLength(a)
+  let d = getDecimalsLength(b)
+  return (
+    (e = Math.pow(10, Math.max(c, d))),
+    (MathMul(a, e) - MathMul(b, e)) / e
+  )
+}
+
+// 浮点数相乘
+export function MathMul (a, b) {
+  if (!a || !b) return '0'
+  let c = 0
+  let d = a.toString()
+  let e = b.toString()
+  c += getDecimalsLength(d)
+  c += getDecimalsLength(e)
+  return (Number(d.replace('.', '')) * Number(e.replace('.', ''))) / Math.pow(10, c)
+}
+
+// 浮点数相除
+export function MathDiv (a, b) {
+  if (!a || !b) return '0'
+  let c
+  let d
+  let e = getDecimalsLength(a)
+  let f = getDecimalsLength(b)
+  return (
+    (c = Number(a.toString().replace('.', ''))),
+    (d = Number(b.toString().replace('.', ''))),
+    MathMul(c / d, Math.pow(10, f - e))
+  )
+}
+```
