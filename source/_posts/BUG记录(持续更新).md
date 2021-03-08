@@ -23,14 +23,18 @@ el.addEventListener('blur', function () {
 })
 ```
 
-Q：父元素设置overflow: hidden; 页面滚动会卡顿
+Q：IOS父元素设置overflow: hidden; 页面滚动会卡顿
 A：设置 -webkit-overflow-scrolling: touch;
 
 Q：IOS12及以下 页面高度为100% 设置固定定位 底部按钮滑动会消失
 A：替换为绝对定位 滚动内容单独设置一个100%的盒子（或者使用flex布局，滚动元素设置flex: 1，固定元素设置高度，不使用定位）
 
 Q：ios13 使用window.location.href 跳转到第三方页面 返回后页面不刷新
-A：添加中间页面
+A：添加跳转中间页面
+
+Q: IOS12以下 跳转第三方页面pagehide 事件不生效
+A：FIX：跳转前手动执行pagehide事件
+
 
 - andriod
 Q：输入框被激活时，键盘挡住输入框
@@ -47,7 +51,7 @@ if (/Android/gi.test(navigator.userAgent)) {
 ```
 
 Q: 安卓webView5.1.1系统白屏
-A：第三方包es6语法未转换 使用transpileDependencies
+A：第三方包es6语法未转换 使用transpileDependencies将第三方包加入编译列表
 
 Q: 弹窗蒙版穿透(Vue)
 A：内容不可滑动 @touchmove.prevent 内容可滑动 @touchmove.self.prevent
