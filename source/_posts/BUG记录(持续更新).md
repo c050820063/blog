@@ -35,6 +35,34 @@ A：添加跳转中间页面
 Q: IOS12以下 跳转第三方页面pagehide 事件不生效
 A：FIX：跳转前手动执行pagehide事件
 
+Q: IOS禁止缩放
+IOS10以前
+A：<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;" name="viewport" />
+IOS10以后
+A：
+``` bash
+window.onload = function() {
+  // 阻止双击放大
+  var lastTouchEnd = 0;
+  document.addEventListener('touchstart', function(event) {
+    if (event.touches.length > 1) {
+      event.preventDefault();
+    }
+  });
+  document.addEventListener('touchend', function(event) {
+    var now = (new Date()).getTime();
+    if (now - lastTouchEnd <= 300) {
+      event.preventDefault();
+    }
+    lastTouchEnd = now;
+  }, false);
+
+  // 阻止双指放大
+  document.addEventListener('gesturestart', function(event) {
+    event.preventDefault();
+  });
+}
+```
 
 - andriod
 Q：输入框被激活时，键盘挡住输入框

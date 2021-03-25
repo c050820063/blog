@@ -29,3 +29,6 @@
   $ hexo deploy
 ```
 
+## bug记录
+Q：hexo g生成的文件为空
+A：node版本过高、降版本
