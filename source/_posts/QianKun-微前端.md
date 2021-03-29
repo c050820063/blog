@@ -65,9 +65,9 @@ start();
 import { loadMicroApp } from 'qiankun';
 loadMicroApp(
   { 
-    name: 'app', 
-   	entry: '//localhost:7100',
-    container: '#yourContainer', 
+    name: 'app',
+    entry: '//localhost:7100',
+    container: '#yourContainer',
   }
 );
 ```

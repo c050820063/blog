@@ -236,10 +236,18 @@ Function.prototype.mybind = function(context, ...args) {
 }
 ```
 
-<!-- ### 实现new操作
+### 实现new操作
 ``` bash
-
-``` -->
+const new = function (func) {
+  const o = Object.create(func.prototype); // 创建对象
+  const k = func.call(o); // 改变this指向，把结果付给k
+  if (k && k instanceof Object) { // 判断k的类型是不是对象
+    return k; // 是，返回k
+  } else {
+    return o; // 不是返回返回构造函数的执行结果
+  }
+}
+```
 
 
 
