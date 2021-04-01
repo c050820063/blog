@@ -1,5 +1,5 @@
 ---
-title: utils
+title: study
 date: 2020-08-19 11:11:44
 tags:
 ---
@@ -121,28 +121,36 @@ function throttle (fn, delay) {
 let unique_1 = arr => [...new Set(arr)];
 
 function unique_2(array) {
-    var res = array.filter(function (item, index, array) {
-        return array.indexOf(item) === index;
-    })
-    return res;
+  var res = array.filter(function (item, index, array) {
+    return array.indexOf(item) === index;
+  })
+  return res;
 }
 
-let unique_3 = arr => arr.reduce((pre, cur) => pre.includes(cur) ? pre : [...pre, cur], []);
+let unique_3 = arr =>
+  arr.reduce((pre, cur) =>
+    pre.includes(cur)
+      ? pre
+      : [...pre, cur]
+  , []);
 
 function unique_4(array) {
-    var obj = {};
-    return array.filter(function (item, index, array) {
-        return obj.hasOwnProperty(typeof item + item) ? false : (obj[typeof item + item] = true)
-    })
+  var obj = {};
+  return array.filter(function (item, index, array) {
+    return obj.hasOwnProperty(typeof item + item)
+      ? false
+      : (obj[typeof item + item] = true)
+  })
 }
 
 ```
 
 ### 柯里化函数
 ``` bash
-const currying = (fn, ...args) => fn.length > args.length
-  ? (...arguments) => currying(fn, ...args, ...arguments)
-  : fn(...args)
+const currying = (fn, ...args) =>
+  fn.length > args.length
+    ? (...arguments) => currying(fn, ...args, ...arguments)
+    : fn(...args)
 ```
 
 ### 数组flat
@@ -238,14 +246,19 @@ Function.prototype.mybind = function(context, ...args) {
 
 ### 实现new操作
 ``` bash
-const new = function (func) {
-  const o = Object.create(func.prototype); // 创建对象
-  const k = func.call(o); // 改变this指向，把结果付给k
-  if (k && k instanceof Object) { // 判断k的类型是不是对象
-    return k; // 是，返回k
-  } else {
-    return o; // 不是返回返回构造函数的执行结果
-  }
+const new = function () {
+  const obj = Object.create(null) // 创建对象
+  const Constructor = [].shift.call(arguments) // 取出构造函数
+  obj.__proto__ = Constructor.prototype // 将对象的__proto__指向 构造函数的prototype
+  const ret = Constructor.apply(obj, arguments) // 改变this指向
+  return typeof ret === 'object' ? ret : obj
+  # const o = Object.create(func.prototype); // 创建对象
+  # const k = func.call(o); // 改变this指向，把结果付给k
+  # if (k && k instanceof Object) { // 判断k的类型是不是对象
+  #   return k; // 是，返回k
+  # } else {
+  #   return o; // 不是返回返回构造函数的执行结果
+  # }
 }
 ```
 
