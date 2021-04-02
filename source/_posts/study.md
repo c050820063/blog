@@ -207,13 +207,13 @@ function deepClone (obj, map = new WeakMap()) {
 }
 ```
 
-### 实现一个对象类型的函数
+### 类型判断
 核心：Object.prototype.toString
 ``` bash
 const isType = (type) => (obj) => Object.prototype.toString.call(obj) === `[object ${type}]`
 ```
 
-### 手写call、apply、bind
+### call、apply、bind
 改变this指向
 
 ``` bash
@@ -262,8 +262,137 @@ const new = function () {
 }
 ```
 
+### leetcode
+- LRU 缓存
+``` bash
+class LRUCache {
+  constructor(capacity) {
+    this.capacity = capacity
+    this.capacityMap = new Map()
+  }
 
+  get(key) {
+    const isExist = this.capacityMap.has(key)
+    if (!isExist) return -1
+    const value = this.capacityMap.get(key)
+    this.capacityMap.delete(key)
+    this.capacityMap.set(key, value)
+    return value
+  }
 
+  put(key, value) {
+    if (this.capacityMap.has(key)) this.capacityMap.delete(key)
+    this.capacityMap.set(key, value)
+    if (this.capacityMap.size > this.capacity) {
+      this.capacityMap.delete(this.capacityMap.keys().next().value)
+    }
+  }
+}
+```
+
+- 反转链表
+``` bash
+const reverseList = function(head) {
+  let p1 = head
+  let p2 = null
+  while(p1) {
+    const { next, val } = p1
+    p2 = { val, next: p2 }
+    p1 = next
+  }
+  return p2
+}
+```
+
+- 字典树
+``` bash
+class Trie {
+  constructor() {
+    this.tries = {}
+  }
+  insert(word) {
+    const res = [...word].reduce((tries, cur) => {
+      return tries[cur] || (tries[cur] = {})
+    }, this.tries)
+    res.isExist = true
+  }
+  search(word) {
+    let tries = this.tries
+    for (let w of word) {
+      tries = tries[w]
+      if (!tries) {
+        return false
+      }
+    }
+    return !!tries.isExist
+  }
+  startsWith(prefix) {
+    let tries = this.tries
+    for (let w of prefix) {
+      tries = tries[w]
+      if (!tries) {
+        return false
+      }
+    }
+    return true
+  }
+}
+```
+
+- 贪心算法：给定数值的最小字符串
+``` bash
+const getSmallestString = function(n, k) {
+  let str = ''
+  for (let i = n; i > 0; i--) {
+    const temp = k - 26 * (i - 1)
+    if (temp > 0) {
+      str += String.fromCharCode(96 + temp) // 获取'a-z'
+      k -= temp
+    } else {
+      str += 'a'
+      k -= 1
+    }
+  }
+  return str
+}
+```
+
+- 反转二叉树
+``` bash
+const invertTree = function(root) {
+  if (!root) return root
+  const { left, right } = root
+  const temp = left
+  root.left = right
+  root.right = temp
+  invertTree(root.left)
+  invertTree(root.right)
+  return root
+}
+```
+
+- 斐波那契额数列
+``` bash
+const fib = function(n) {
+  if (n < 2) return n
+  let sum = 1
+  let prev = 0
+  let next = 0
+  for (let i = 2; i <= n; i++) {
+    prev = next
+    next = sum
+    sum = prev + next
+  }
+  return sum
+}
+```
+
+- 数组中的第K个最大元素
+``` bash
+const findKthLargest = function(nums, k) {
+  return nums.sort((a, b) => b - a)[k - 1]
+}
+```
 ### 加减乘除
 ``` bash
 // 获取小数个数
