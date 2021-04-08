@@ -219,7 +219,10 @@ const isType = (type) => (obj) => Object.prototype.toString.call(obj) === `[obje
 ``` bash
 Function.prototype.myCall = function() {
   let [thisArg, ...args] = [...arguments]
-  thisArg = Object(thisArg) || window
+  thisArg = thisArg === 'null' ||
+    thisArg === 'undefined'
+      ? window
+      : Object(thisArg)
   const fn = Symbol()
   thisArg[fn] = this
   const result = thisArg[fn](...args)
@@ -229,7 +232,10 @@ Function.prototype.myCall = function() {
 
 Function.prototype.myApply = function() {
   let [thisArg, args] = [...arguments]
-  thisArg = Object(thisArg) || window
+  thisArg = thisArg === 'null' ||
+    thisArg === 'undefined'
+      ? window
+      : Object(thisArg)
   const fn = Symbol()
   thisArg[fn] = this
   const result = thisArg[fn](...args)
@@ -239,7 +245,7 @@ Function.prototype.myApply = function() {
 
 Function.prototype.mybind = function(context, ...args) {
   return (...newArgs) => {
-    return this.call(context,...args, ...newArgs)
+    return this.call(context, ...args, ...newArgs)
   }
 }
 ```
@@ -251,7 +257,7 @@ const new = function () {
   const Constructor = [].shift.call(arguments) // 取出构造函数
   obj.__proto__ = Constructor.prototype // 将对象的__proto__指向 构造函数的prototype
   const ret = Constructor.apply(obj, arguments) // 改变this指向
-  return typeof ret === 'object' ? ret : obj
+  return ret instanceof Object ? ret : obj
   # const o = Object.create(func.prototype); // 创建对象
   # const k = func.call(o); // 改变this指向，把结果付给k
   # if (k && k instanceof Object) { // 判断k的类型是不是对象
@@ -260,6 +266,24 @@ const new = function () {
   #   return o; // 不是返回返回构造函数的执行结果
   # }
 }
+```
+
+### 实现instanceof
+``` bash
+fuction myInstanceof (left, right) {
+  left = left.__proto__
+  const prototype = right.prototype
+  while(true) {
+    if (left === null) {
+      return false
+    }
+    if (left === prototype) {
+      return true
+    }
+    left = left.__proto__
+  }
+}
+
 ```
 
 ### leetcode
@@ -393,6 +417,29 @@ const findKthLargest = function(nums, k) {
   return nums.sort((a, b) => b - a)[k - 1]
 }
 ```
+- 字符的最短距离
+// https://leetcode-cn.com/problems/shortest-distance-to-a-character/
+``` bash
+const shortestToChar = function(s, c) {
+  const answer = [];
+  const cArr = [];
+  [...s].forEach((item, index) => {
+    item === c && cArr.push(index)
+  });
+  [...s].forEach((_, index) => {
+    let shortL = null;
+    cArr.forEach(item => {
+      const l = Math.abs(item - index);
+      shortL = shortL === null || shortL > l
+        ? l
+        : shortL
+    });
+    answer.push(shortL);
+  });
+  return answer
+};
+```
+
 ### 加减乘除
 ``` bash
 // 获取小数个数
@@ -455,3 +502,6 @@ export function MathDiv (a, b) {
   )
 }
 ```
+
+### setState是同步还是异步
+setState 只在合成事件和钩子函数中是“异步”的，在原生事件和 setTimeout 中都是同步的。
