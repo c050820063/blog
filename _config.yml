@@ -101,4 +101,4 @@ deploy:
   type: git
   repo: https://github.com/c050820063/c050820063.github.io.git
   branch: master
-  message: test
+  message: updated article

@@ -287,7 +287,7 @@ fuction myInstanceof (left, right) {
 ```
 
 ### leetcode
-- LRU 缓存
+- [LRU 缓存](https://leetcode-cn.com/problems/lru-cache/)
 ``` bash
 class LRUCache {
   constructor(capacity) {
@@ -314,7 +314,7 @@ class LRUCache {
 }
 ```
 
-- 反转链表
+- [反转链表](https://leetcode-cn.com/problems/fan-zhuan-lian-biao-lcof/)
 ``` bash
 const reverseList = function(head) {
   let p1 = head
@@ -328,7 +328,7 @@ const reverseList = function(head) {
 }
 ```
 
-- 字典树
+- [字典树](https://leetcode-cn.com/problems/implement-trie-prefix-tree/)
 ``` bash
 class Trie {
   constructor() {
@@ -363,7 +363,7 @@ class Trie {
 }
 ```
 
-- 贪心算法：给定数值的最小字符串
+- [给定数值的最小字符串](https://leetcode-cn.com/problems/smallest-string-with-a-given-numeric-value/)
 ``` bash
 const getSmallestString = function(n, k) {
   let str = ''
@@ -381,7 +381,7 @@ const getSmallestString = function(n, k) {
 }
 ```
 
-- 反转二叉树
+- [反转二叉树](https://leetcode-cn.com/problems/invert-binary-tree/)
 ``` bash
 const invertTree = function(root) {
   if (!root) return root
@@ -395,7 +395,7 @@ const invertTree = function(root) {
 }
 ```
 
-- 斐波那契额数列
+- [斐波那契额数列](https://leetcode-cn.com/problems/fibonacci-number/)
 ``` bash
 const fib = function(n) {
   if (n < 2) return n
@@ -411,14 +411,14 @@ const fib = function(n) {
 }
 ```
 
-- 数组中的第K个最大元素
+- [数组中的第K个最大元素](https://leetcode-cn.com/problems/kth-largest-element-in-an-array/)
 ``` bash
 const findKthLargest = function(nums, k) {
   return nums.sort((a, b) => b - a)[k - 1]
 }
 ```
-- 字符的最短距离
-// https://leetcode-cn.com/problems/shortest-distance-to-a-character/
+
+- [字符的最短距离](https://leetcode-cn.com/problems/shortest-distance-to-a-character/)
 ``` bash
 const shortestToChar = function(s, c) {
   const answer = [];
