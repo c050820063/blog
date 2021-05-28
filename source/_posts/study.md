@@ -440,6 +440,40 @@ const shortestToChar = function(s, c) {
 };
 ```
 
+- [判断一个链表是否为回文链表](https://leetcode-cn.com/problems/palindrome-linked-list/)
+``` bash
+const isPalindrome = function(head) {
+  if(!head) return false
+  const list = []
+  while(head) {
+      list.push(head.val)
+      head = head.next
+  }
+  console.log(list)
+  for (let i = 0, j = list.length - 1; i < j; i++, j--) {
+      if (list[i] !== list[j]) {
+          return false
+      }
+  }
+  return true
+};
+```
+
+- [最长连续递增序列](https://leetcode-cn.com/problems/longest-continuous-increasing-subsequence/)
+``` bash
+const findLengthOfLCIS = function(nums) {
+    let s = 0
+    let max = 0
+    for (let i = 0; i < nums.length; i++) {
+        if (i > 0 && nums[i] <= nums[i - 1]) {
+            s = i
+        }
+        max = Math.max(max, i - s + 1)
+    }
+    return max
+};
+```
+
 ### 加减乘除
 ``` bash
 // 获取小数个数
