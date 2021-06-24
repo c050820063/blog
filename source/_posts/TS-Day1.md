@@ -14,25 +14,25 @@ tags:
 ## 基础类型定义
 
 ### string
-``` bash
+``` js
 const name:string = 'joke'
 ```
 
 ### number
-``` bash
+``` js
 const age:number = 16
 const stature:number = 178.5
 const nan:number = NaN
 ```
 
 ### boolean
-``` bash
+``` js
 const b:boolean = true
 ```
 
 ### enum 枚举
 - 人: 男人、女人、中性
-``` bash
+``` js
   enum REN{nan, nv, yao}
   console.log(REN.yao) // 2
 
@@ -41,7 +41,7 @@ const b:boolean = true
 ```
 
 ### any
-``` bash
+``` js
   let t:any = 0
   t = 'any'
   t = true

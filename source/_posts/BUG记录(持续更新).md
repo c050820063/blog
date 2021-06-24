@@ -9,7 +9,7 @@ tags:
 Q: ios12+,当页面输入框聚焦时，切换页面，页面存在错位
 <!-- more -->
 A:
-``` bash
+``` js
 el.addEventListener('blur', function () {
   const windowFocusHeight = window.innerHeight
   if (windowHeight === windowFocusHeight) return
@@ -40,7 +40,7 @@ IOS10以前
 A：<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;" name="viewport" />
 IOS10以后
 A：
-``` bash
+``` js
 window.onload = function() {
   // 阻止双击放大
   var lastTouchEnd = 0;
@@ -67,7 +67,7 @@ window.onload = function() {
 - andriod
 Q：输入框被激活时，键盘挡住输入框
 A：
-``` bash
+``` js
 if (/Android/gi.test(navigator.userAgent)) {
   window.addEventListener('resize', function () {
     window.setTimeout(function () {

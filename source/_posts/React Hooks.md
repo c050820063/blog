@@ -22,7 +22,7 @@ tags:
   - useState 返回一对值：当前状态和更新状态的函数，在事件处理函数中或其他地方调用这个函数。它类似 class 组件的 this.setState，但是它不会将新旧 state进行合并；
   - 在初始渲染期间，返回的状态 (state) 与传入的第一个参数 (initialState) 值相同 setState 函数用于更新 state。它接收一个新的 state 值并将组件的一次重新渲染加入队列
 1. 对比类的写法和函数组件
-``` bash
+``` js
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 
@@ -73,7 +73,7 @@ ReactDOM.render(
   - 函数组件每次渲染都会被调用，但是每一次调用中 number 值都是常量，并且它被赋予了当前渲染中的状态值
   - 在单次渲染的范围内，props和state始终保持不变
 
-``` bash
+``` js
 function Counter2(){
   const [number,setNumber] = useState(0);
   function alertNumber(){
@@ -92,7 +92,7 @@ function Counter2(){
 ```
 3. 函数式更新
   - 如果新的 state 需要通过使用先前的 state 计算得出，那么可以将函数传递给 setState。该函数将接收先前的 state，并返回一个更新后的值。这样每次拿到都是最新的状态值。
-``` bash
+``` js
   // 函数式更新
 function Counter2(){
   const [number, setNum] = useState(0);
@@ -122,7 +122,7 @@ function Counter2(){
   - initialState 参数只会在组件的初始渲染中起作用，后续渲染时会被忽略
   - 如果初始 state 需要通过复杂计算获得，则可以传入一个函数，在函数中计算并返回初始的 state，此函数只在初始渲染时被调用
   - 与 class 组件中的 setState 方法不同，useState 不会自动合并更新对象。可以用函数式的 setState 结合展开运算符来达到合并更新对象的效果
-``` bash
+``` js
 function Counter3(){
   const [userInfo, setUserInfo] = useState(() => {
     return {
@@ -161,7 +161,7 @@ function Counter3(){
   + 减少渲染次数
     - 把内联回调函数及依赖项数组作为参数传入 useCallback，它将返回该回调函数的 memoized (记忆)版本，该回调函数仅在某个依赖项改变时才会更新；
     - 把创建函数和依赖项数组作为参数传入 useMemo，它仅会在某个依赖项改变时才重新计算 memoized 值。这种优化有助于避免在每次渲染时都进行高开销的计算；
-``` bash
+``` js
 function Child({onButtonClick,data}){
   console.log('Child render');
   return (
@@ -190,7 +190,7 @@ function App(){
 
 6. 注意事项
  - 只能在函数最外层调用 Hook。不要在循环、条件判断或者子函数中调用。
-``` bash
+``` js
 function App2() {
   const [number, setNumber] = useState(0);
   const [visible, setVisible] = useState(false);
@@ -222,7 +222,7 @@ function App2() {
   `const [state, dispatch] = useReducer(reducer, initialArg, init);`
   - 在某些场景下，useReducer 会比 useState 更适用，例如 state 逻辑较复杂且包含多个子值，或者下一个 state 依赖于之前的 state 等；
 
-``` bash
+``` js
 const initialState = 0;
 
 function reducer(state, action) {
@@ -257,7 +257,7 @@ function App3(){
   - useContext(MyContext) 相当于 class 组件中的 static contextType = MyContext 或者 `<MyContext.Consumer>`
   - useContext(MyContext) 只是更方便的读取 context 的值以及订阅 context 的变化。还是需要在上层组件树中使用 `<MyContext.Provider>` 来为下层组件提供 context
 
-``` bash
+``` js
 const CounterContext = React.createContext();
 function reducer2(state, action) {
   switch (action.type) {
@@ -296,7 +296,7 @@ function App4(){
   - 该 Hook 接收一个包含命令式、且可能有副作用代码的函数
   `useEffect(didUpdate)`
 1. 修改document的标题，class的实现方式
-``` bash
+``` js
 class Title extends React.Component {
   constructor(props) {
     super(props);
@@ -325,7 +325,7 @@ class Title extends React.Component {
 > 在这个 class 中，需要在两个生命周期函数中编写重复的代码,这是因为很多情况下，我们希望在组件加载和更新时执行同样的操作。我们希望它在每次渲染之后执行，但 React 的 class 组件没有提供这样的方法。即使我们提取出一个方法，我们还是要在两个地方调用它。useEffect会在第一次渲染之后和每次更新之后都会执行。
 
 下面是函数组件，使用useEffect的方式：
-``` bash
+``` js
 function Title2(){
   const [number,setNumber] = useState(0);
   // 相当于 componentDidMount 和 componentDidUpdate:
@@ -345,7 +345,7 @@ function Title2(){
 2. 跳过 Effect 进行性能优化
   - 如果某些特定值在两次重渲染之间没有发生变化，你可以通知 React 跳过对 effect 的调用，只要传递数组作为 useEffect 的第二个可选参数即可
   - 如果想执行只运行一次的 effect（仅在组件挂载和卸载时执行），可以传递一个空数组（[]）作为第二个参数。这就告诉 React 这个 effect 不依赖于 props 或 state 中的任何值，所以它永远都不需要重复执行
-``` bash
+``` js
 function Counter6(){
   const [number,setNumber] = useState(0);
   useEffect(() => {
@@ -363,7 +363,7 @@ function Counter6(){
 3. 消除副作用
   - 副作用函数还可以通过返回一个函数来指定如何清除副作用
   - 为防止内存泄漏，清除函数会在组件卸载前执行。另外，如果组件多次渲染，则在执行下一个 effect 之前，上一个 effect 就已被清除
-``` bash
+``` js
 function Counter7() {
   const [number, setNumber] = useState(0);
   useEffect(() => {
@@ -395,7 +395,7 @@ function App5() {
   - useRef 返回一个可变的 ref 对象，其 .current 属性被初始化为传入的参数（initialValue）
   - 返回的 ref 对象在组件的整个生命周期内保持不变
   `const refContainer = useRef(initialValue);`
-``` bash
+``` js
 function Parent() {
   let [number, setNumber] = useState(0);
   return (
@@ -425,7 +425,7 @@ function Child2() {
 ### forwardRef
   - 将ref从父组件中转发到子组件中的dom元素上
   - 子组件接受 props 和 ref 作为参数
-``` bash
+``` js
 function Child3(props,ref){
   return (
     <input type="text" ref={ref}/>
@@ -452,7 +452,7 @@ function Parent2(){
 ### useImperativeHandle
   - useImperativeHandle 可以让你在使用 ref 时自定义暴露给父组件的实例值
   - 在大多数情况下，应当避免使用 ref 这样的命令式代码。useImperativeHandle 应当与 forwardRef 一起使用
-``` bash
+``` js
 function Child4(props,ref){
   const inputRef = useRef();
   useImperativeHandle(ref,()=>(
@@ -492,7 +492,7 @@ function Parent3(){
   - 事实上 Hook 的每次调用都有一个完全独立的 state；
   - 自定义 Hook 更像是一种约定，而不是一种功能。如果函数的名字以 use 开头，并且调用了其他的 Hook，则就称其为一个自定义 Hook；
 1. 自定义一个计数器
-``` bash
+``` js
 function useNumber(initNumber){
   const [number, setNumber] = useState(initNumber || 0)
   useEffect(() => {
@@ -518,7 +518,7 @@ function App6(){
   - useLocation：查看当前路由
   - useHistory：返回上一个路由
   - useRouteMatch：尝试以与Route相同的方式匹配当前URL，在无需实际呈现Route的情况下访问匹配数据最有用
-``` bash
+``` js
 import { BrowserRouter as Router, Route, Switch, useParams, useLocation, useHistory } from "react-router-dom";
 function Post() {
    let { title } = useParams();
@@ -541,7 +541,7 @@ document.getElementById("root")
 );
 ```
 
-``` bash
+``` js
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Route, useRouteMatch } from 'react-router-dom';

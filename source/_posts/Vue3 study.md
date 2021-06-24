@@ -10,7 +10,7 @@ tags:
 <!-- more -->
 让我们通过一个用了新的组件 API 的组件的简单示例，来了解其工作原理。
 
-``` bash
+``` js
 import { reactive, watch, toRefs, computed, watchEffect } from 'vue'
 export default {
   setup () {
@@ -64,14 +64,14 @@ setup 函数会在 beforeCreate 之后、created 之前执行
 - 接收 props 数据
 
 1. 在 props 中定义当前组件允许外界传递过来的参数名称：
-``` bash
+``` js
 props: {
   p1: String
 }
 ```
 2. 通过 setup 函数的第一个形参，接收 props 数据：
 
-``` bash
+``` js
 setup(props) {
   console.log(props.p1)
 }
@@ -80,7 +80,7 @@ setup(props) {
 - context
 setup 函数的第二个形参是一个上下文对象，这个上下文对象中包含了一些有用的属性，这些属性在 vue 2.x 中需要通过 this 才能访问到，在 vue 3.x 中，它们的访问方式如下：
 
-``` bash
+``` js
 const MyComponent = {
   setup(props, context) {
     context.attrs
@@ -100,7 +100,7 @@ reactive() 函数接收一个普通对象，返回一个响应式的数据对象
 - 基本语法
 等价于 vue 2.x 中的 Vue.observable() 函数，vue 3.x 中提供了 reactive() 函数，用来创建响应式的数据对象，基本代码示例如下：
 
-``` bash
+``` js
 import { reactive } from 'vue'
  
 // 创建响应式数据对象，得到的 state 类似于 vue 2.x 中 data() 返回的响应式对象
@@ -109,12 +109,12 @@ const state = reactive({ count: 0 })
 
 - 定义响应式数据供 template 使用
 1. 按需导入 reactive 函数：
-``` bash
+``` js
 import { reactive } from 'vue'
 ```
 
 2. 在 setup() 函数中调用 reactive() 函数，创建响应式数据对象：
-``` bash
+``` js
 setup() {
      // 创建响应式数据对象
  const state = reactive({count: 0})
@@ -125,7 +125,7 @@ setup() {
 ```
 3. 在 template 中访问响应式数据：
 
-``` bash
+``` js
 <p>当前的 count 值为：{{count}}</p>
 ```
 
@@ -133,7 +133,7 @@ setup() {
 
 - 基本语法
 ref() 函数用来根据给定的值创建一个响应式的数据对象，ref() 函数调用的返回值是一个对象，这个对象上只包含一个 .value 属性：
-``` bash
+``` js
 import { ref } from 'vue'
  
 // 创建响应式数据对象 count，初始值为 0
@@ -150,7 +150,7 @@ console.log(count.value) // 输出 1
 - 在 template 中访问 ref 创建的响应式数据
 
 1. 在 setup() 中创建响应式数据：
-``` bash
+``` js
 import { ref } from 'vue'
  
 setup() {
@@ -163,7 +163,7 @@ const count = ref(0)
 ```
 
 2. 在 template 中访问响应式数据：
-``` bash
+``` js
 <template>
  <p>{{count}} --- {{name}}</p>
 </template>
@@ -171,7 +171,7 @@ const count = ref(0)
 
 3. 在 reactive 对象中访问 ref 创建的响应式数据
 当把 ref() 创建出来的响应式数据对象，挂载到 reactive() 上时，会自动把响应式数据对象展开为原始的值，不需通过 .value 就可以直接被访问，例如：
-``` bash
+``` js
 const count = ref(0)
 const state = reactive({
   count
@@ -183,7 +183,7 @@ console.log(count)       // 输出 1
 ```
 
 - 注意：新的 ref 会覆盖旧的 ref，示例代码如下：
-``` bash
+``` js
 // 创建 ref 并挂载到 reactive 中
 const c1 = ref(0)
 const state = reactive({
@@ -203,7 +203,7 @@ console.log(c1.value) // 输出 0
 
 ### isRef
 isRef() 用来判断某个值是否为 ref() 创建出来的对象；应用场景：当需要展开某个可能为 ref() 创建出来的值的时候，例如：
-``` bash
+``` js
 import { isRef } from 'vue'
  
 const unwrapped = isRef(foo) ? foo.value : foo
@@ -211,7 +211,7 @@ const unwrapped = isRef(foo) ? foo.value : foo
 
 ### toRefs
 toRefs() 函数可以将 reactive() 创建出来的响应式对象，转换为普通的对象，只不过，这个对象上的每个属性节点，都是 ref() 类型的响应式数据，最常见的应用场景如下：
-``` bash
+``` js
 
 import { toRefs } from 'vue'
  
@@ -239,7 +239,7 @@ setup() {
 
 页面上可以直接访问 setup() 中 return 出来的响应式数据：
 
-``` bash
+``` js
 <template>
   <div>
     <p>当前的count值为：{{count}}</p>
@@ -252,7 +252,7 @@ setup() {
 computed()函数用来创建计算属性，返回的是个ref实例
 
 - 只读属性
-``` bash
+``` js
 template>
   <div class="wrapper">
       <p>count:{{refCount}}</p>
@@ -280,7 +280,7 @@ export default {
 ```
 
 - 可读可写
-``` bash
+``` js
 <template>
   <div class="wrapper">
     <p>count:{{refCount}}</p>
@@ -321,7 +321,7 @@ export default {
 
 - 基本用法
 
-``` bash
+``` js
 import { watch,ref, set } from "vue";
 export default {
   setup(){
@@ -338,7 +338,7 @@ export default {
 
 - 监听指定数据源
 ref
-``` bash
+``` js
 const count = ref(2)
 watch(count,(count,oldCount)=>{
   console.log(count,oldCount)
@@ -350,7 +350,7 @@ setTimeout(() => {
 // 4 2
 ```
 reactive
-``` bash
+``` js
 setup() {
   const state = reactive({ count: 0 });
   watch(() => state.count, (count, oldCount) => console.log(count, oldCount));
@@ -370,7 +370,7 @@ watch(
 
 - 监视多个数据源
 ref
-``` bash
+``` js
 const count = ref(0)
 const name = ref('yp1')
 
@@ -399,7 +399,7 @@ setTimeout(()=>{
 ```
 
 reactive
-``` bash
+``` js
 const state = reactive({count:0,name:'yp1'})
 
 watch(
@@ -430,7 +430,7 @@ setTimeout(()=>{
 在setup()函数内创建的watch监视，会在当前组件被销毁的时候自动停止。watch的返回值调用
 两秒内点击按钮，取消了watch监听，可查 console
 
-``` bash
+``` js
 <template>
   <div class="wrapper">
     <div>{{count}}</div>
@@ -475,7 +475,7 @@ eg watch 被重复执行了 或者被强制stop
 
 实际场景二：输入框按键输值请求
 
-``` bash
+``` js
 <template>
   <div>
     <input type="text" v-model="kw">
@@ -529,7 +529,7 @@ errorCaptured | onErrorCaptured |
 
 - 建议异步请求，在onMounted()/mounted()
 
-``` bash
+``` js
 import { onBeforeMount,onMounted, } from "@vue/composition-api";
 
 setup(){
@@ -547,7 +547,7 @@ setup(){
 ## provide & inject
 - 共享普通数据
 祖组件
-``` bash
+``` js
 import { provide } from '@vue/composition-api'
 
 setup(){
@@ -556,7 +556,7 @@ setup(){
 ```
 
 孙组件
-``` bash
+``` js
 import { inject } from '@vue/composition-api'
 
 setup(){
@@ -576,7 +576,7 @@ setup(){
 
 - mixins
 
-``` bash
+``` js
 import CounterMixin from './mixins/counter'
 
 export default {
@@ -588,7 +588,7 @@ mixins 的最大缺点在于我们对它实际上添加到组件中的行为一�
 
 - 作用域插槽
 
-``` bash
+``` js
 <template>
   <Counter v-slot="{ count, increment }">
      {{ count }}
@@ -601,7 +601,7 @@ mixins 的最大缺点在于我们对它实际上添加到组件中的行为一�
 
 - Composition API
 
-``` bash
+``` js
 function useCounter() {
   const count = ref(0)
   function increment () { count.value++ }
@@ -626,7 +626,7 @@ export default {
 
 这也是使用第三方库的更优雅的方式。例如，如果我们想使用 Vuex，则可以显式地使用 useStore 函数，而不是污染 Vue 原型（this.$store）。这种方法也消除了 Vue 插件的幕后魔力。
 
-``` bash
+``` js
 const { commit, dispatch } = useStore()
 ```
 
@@ -636,7 +636,7 @@ const { commit, dispatch } = useStore()
 ## 全局挂载/配置 API 更改
 
 - Vue2
-``` bash
+``` js
 import Vue from 'vue'
 import App from './App.vue'
 
@@ -652,7 +652,7 @@ new Vue({
 ```
 
 -Vue3
-``` bash
+``` js
 import { createApp } from 'vue'
 import App from './App.vue'
 
@@ -674,7 +674,7 @@ Vue3 每个配置都限于使用 createApp 定义的某个 Vue 程序,它可以�
 ## 片段（Fragments）
 Vue 3 中添加了片段功能
 Vue2 中无发创建这样的组件
-``` bash
+``` js
 <template>
   <div>Hello</div>
   <div>World</div>
@@ -683,7 +683,7 @@ Vue2 中无发创建这样的组件
 原因是代表任何 Vue 组件的 Vue 实例都需要绑定到单个 DOM 元素中。创建具有多个 DOM 节点的组件的唯一方法是创建一个没有基础 Vue 实例的功能组件。
 
 React同样有这个问题， React使用了一个名为 Fragment 的虚拟元素
-``` bash
+``` js
 class Columns extends React.Component {
   render() {
     return (
@@ -704,7 +704,7 @@ class Columns extends React.Component {
 将被用在 Vue 3 中的另一个从 React 学来的功能是 Suspense 组件。
 
 Suspense 能够暂停你的组件渲染，并渲染后备组件，直到条件满足为止。在 Vue London 期间，尤雨溪简短地谈到了这个主题，并向我们展示了可以期望的 API。事实证明，Suspense 只是带有插槽的组件：
-``` bash
+``` js
 <Suspense>
   <template >
     <Suspended-component />
@@ -721,12 +721,12 @@ Suspense可以挂起Loading内容将一直显示到Suspended-component完全渲�
 
 - Vue2
 我们可以从表单元素上很好的了解 v-model：
-``` bash
+``` js
 <input v-bind="property />
 ```
 
 在组件内使用v-model，v-model 只是传递 value 属性和侦听 input 事件的捷径。把上面的例子重写为以下语法，将具有完全相同的效果：
-``` bash
+``` js
 <input 
   v-bind:value="property"
   v-on:input="property = $event.target.value"
@@ -734,7 +734,7 @@ Suspense可以挂起Loading内容将一直显示到Suspended-component完全渲�
 ```
 也可以通过 model 属性更改默认属性及事件
 
-``` bash
+``` js
 model: {
   prop: 'checked',
   event: 'change'
@@ -744,7 +744,7 @@ model: {
 
 - Vue3
 
-``` bash
+``` js
 <InviteeForm
   v-model:name="inviteeName"
   v-model:email="inviteeEmail"
@@ -760,7 +760,7 @@ Portals 是特殊的组件，用来在当前组件之外渲染某些内容。它
 
 对于每个 Portal，我们需要为其指定目标位置，在该目标位置将渲染 Portals 内容。在Vue2中可以使用 [portal-vue](https://github.com/LinusBorg/portal-vue) 库。
 
-``` bash
+``` js
 <portal to="destination">
   <p>This slot content will be rendered wherever thportal-target with name 'destination'
     is located.</p>
@@ -779,7 +779,7 @@ Portals 是特殊的组件，用来在当前组件之外渲染某些内容。它
 自定义指令 API 在 Vue 3 中将略有变化，以便更好地与组件生命周期保持一致。这项改进应使 API 更加直观。
 
 - Vue2
-``` bash
+``` js
 const MyDirective = {
   bind(el, binding, vnode, prevVnode) {},
   inserted() {},
@@ -790,7 +790,7 @@ const MyDirective = {
 ```
 
 - Vue3
-``` bash
+``` js
 const MyDirective = {
   beforeMount(el, binding, vnode, prevVnode) {},
   mounted() {},
@@ -803,21 +803,21 @@ const MyDirective = {
 ## 挂载原型
 
 - Vue2
-``` bash
+``` js
 import Vue from 'vue'
 
 Vue.prototype.xxx = xxx
 ```
 
 -Vue3
-``` bash
+``` js
 app.config.globalProperties.xxx = xxx
 ```
 
 ## 渲染组件
 
 - Vue2
-``` bash
+``` js
 import Vue from 'vue'
 
 const Component = Vue.extend(component)
@@ -828,7 +828,7 @@ document.body.appendChild($vm.$el)
 ```
 
 -Vue3
-``` bash
+``` js
 import { createVNode, render } from 'vue'
 
 const div = document.createElement('div')

@@ -7,7 +7,7 @@ tags:
 ### @babel/core
 Babel的核心模块
 - 安装
-``` bash
+``` js
 npm i -D @babel/core
 ```
 <!-- more -->
@@ -21,26 +21,26 @@ babel.transform("code", options);
 ### @babel/cli
 终端运行工具, 内置的插件, 可以在终端使用babel的工具
 - 安装
-``` bash
+``` js
 npm i -D @babel/cli
 ```
 
 #### 用法一
 
-``` bash
+``` js
 ./node_modules/.bin/babel src --out-dir lib
 ```
 这段语句的意思是: 它使用我们设置的解析方式来解析src目录下的所有JS文件, 并将转换后的每个文件都输出到lib目录下.
 
 如果是 `npm@5.2.0` 就可以使用：
-``` bash
+``` js
 npx babel src --out-dir lib
 ```
 
 #### 用法二
 给package.json中配置一段脚本命令:
 
-``` bash
+``` js
 {
     "name": "babel-basic",
     "version": "1.0.0",
@@ -62,7 +62,7 @@ npx babel src --out-dir lib
 现在运行npm run build效果也是一样的, -d是--out-dir的缩写...
 (使用上面的 --out-dir 选项。也可以通过使用 --help 运行它来查看 cli 工具接受的其余选项。但对我们来说最重要的是 --plugins 和 --presets。)
 
-``` bash
+``` js
 npx babel --help
 ```
 
@@ -72,7 +72,7 @@ npx babel --help
 如果你是要将ES6+转成ES5, 可以依赖官方插件, 例如:
 @babel/plugin-transform-arrow-functions
 
-``` bash
+``` js
 cnpm i --save-dev @babel/plugin-transform-arrow-functions
 npx babel src --out-dir lib --plugins=@babel/plugin-transform-arrow-functions
 ```
@@ -85,20 +85,20 @@ npx babel src --out-dir lib --plugins=@babel/plugin-transform-arrow-functions
 `可以理解为一个preset就是一组插件的集合`
 
 - @babel/preset-env
-``` bash
+``` js
 npm i --save-dev @babel/preset-env
 ```
 
 envpreset这个preset包括支持现代JavaScript(ES6+)的所有插件.
 
-``` bash
+``` js
 npx babel src --out-dir lib --presets=@babel/preset-env
 ```
 
 ### 配置
 
 创建一个babel.config.js文件:
-``` bash
+``` js
 const presets = [
 	[
     "@babel/env",
@@ -122,7 +122,7 @@ module.exports = { presets };
 
 package.json:
 
-``` bash
+``` js
 {
 	"scripts": {
 		"build": "babel src -d lib"
@@ -134,7 +134,7 @@ package.json:
 
 这个命令行语句看起来并没有修改, 那是因为它默认会去寻找跟根目录下的一个名为babel.config.js的文件(或者babelrc.js也可以), 所以其实就相当于以下这个配置:
 
-``` bash
+``` js
 {
 	"scripts": {
 		"build": "babel src -d lib --config-file ./babel.config.js"
@@ -154,7 +154,7 @@ targets: 只会为目标浏览器中没有的功能加载转换插件
 将edge17改成edge10：
 
 babel.config.js:
-``` bash
+``` js
 const presets = [
     [
         "@babel/env",
@@ -184,7 +184,7 @@ Presets是一组Plugins的集合.
 就像现在你想在edge10浏览器中使用ES7中的方法includes(), 但是我们知道这个版本的浏览器环境是不支持你使用这个方法的, 所以如果你强行使用并不能达到预期的效果.
 而polyfill的作用正是如此, 知道你的环境不允许, 那就帮你引用一个这个环境, 也就是说此时编译后的代码就会变成这样:
 
-``` bash
+``` js
 // 原来的代码
 var hasTwo = [1, 2, 3].includes(2);
 
@@ -210,7 +210,7 @@ var hasTwo = [1, 2, 3].includes(2);
 
 对于应用程序, 我们建议安装使用@babel/polyfill
 
-``` bash
+``` js
 cnpm i --save @babel/polyfill
 ```
 (注意 --save 选项而不是 --save-dev，因为这是一个需要在源代码之前运行的 polyfill。)
@@ -221,7 +221,7 @@ cnpm i --save @babel/polyfill
 
 此时的babel.config.js调整为:
 
-``` bash
+``` js
 const presets = [
 	[
 		"@babel/env",
@@ -256,11 +256,11 @@ module.exports = { presets }
 解决办法是卸载掉@babel/polyfill, 然后重新安装core-js@版本号, 然后重新配置一些babel.config.js文件.
 
 1. 安装core-js@3:
-``` bash
+``` js
 cnpm i --save core-js@3
 ```
 2. 添加corejs选项:
-``` bash
+``` js
 const presets = [
 [
   "@babel/env",

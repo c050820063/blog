@@ -7,7 +7,7 @@ tags:
 ### 实现一个可以拖拽的DIV
 <!-- more -->
 js 版
-``` bash
+``` js
 <div id="xxx"></div>
 
 var dragging = false
@@ -35,7 +35,7 @@ document.addEventListener('mouseup', function(e){
 })
 ```
 react ts版
-``` bash
+``` js
 <div
   ref="container"
   className="container"
@@ -85,7 +85,7 @@ handleMouseUp() {
 ```
 
 ### 防抖
-``` bash
+``` js
 function debounce (fn, delay) {
   let timer = null
   return function(...args) {
@@ -99,7 +99,7 @@ function debounce (fn, delay) {
 ```
 
 ### 节流
-``` bash
+``` js
 function throttle (fn, delay) {
   let flag = true
   let timer = null
@@ -117,7 +117,7 @@ function throttle (fn, delay) {
 ```
 
 ### 去重
-``` bash
+``` js
 let unique_1 = arr => [...new Set(arr)];
 
 function unique_2(array) {
@@ -146,7 +146,7 @@ function unique_4(array) {
 ```
 
 ### 柯里化函数
-``` bash
+``` js
 const currying = (fn, ...args) =>
   fn.length > args.length
     ? (...arguments) => currying(fn, ...args, ...arguments)
@@ -154,7 +154,7 @@ const currying = (fn, ...args) =>
 ```
 
 ### 数组flat
-``` bash
+``` js
 const flatDeep = (arr) => {
   return arr.reduce((res, cur) => {
     if (Array.isArray(cur)) {
@@ -178,7 +178,7 @@ function flatDeep2 (arr, d = 1) {
 ```
 
 ### 深拷贝
-``` bash
+``` js
 function forEach (array, iteratee) {
   let index = -1;
   const length = array.length;
@@ -209,14 +209,14 @@ function deepClone (obj, map = new WeakMap()) {
 
 ### 类型判断
 核心：Object.prototype.toString
-``` bash
+``` js
 const isType = (type) => (obj) => Object.prototype.toString.call(obj) === `[object ${type}]`
 ```
 
 ### call、apply、bind
 改变this指向
 
-``` bash
+``` js
 Function.prototype.myCall = function() {
   let [thisArg, ...args] = [...arguments]
   thisArg = thisArg === 'null' ||
@@ -251,7 +251,7 @@ Function.prototype.mybind = function(context, ...args) {
 ```
 
 ### 实现new操作
-``` bash
+``` js
 const new = function () {
   const obj = Object.create(null) // 创建对象
   const Constructor = [].shift.call(arguments) // 取出构造函数
@@ -269,7 +269,7 @@ const new = function () {
 ```
 
 ### 实现instanceof
-``` bash
+``` js
 fuction myInstanceof (left, right) {
   left = left.__proto__
   const prototype = right.prototype
@@ -288,7 +288,7 @@ fuction myInstanceof (left, right) {
 
 ### leetcode
 - [LRU 缓存](https://leetcode-cn.com/problems/lru-cache/)
-``` bash
+``` js
 class LRUCache {
   constructor(capacity) {
     this.capacity = capacity
@@ -315,7 +315,7 @@ class LRUCache {
 ```
 
 - [反转链表](https://leetcode-cn.com/problems/fan-zhuan-lian-biao-lcof/)
-``` bash
+``` js
 const reverseList = function(head) {
   let p1 = head
   let p2 = null
@@ -329,7 +329,7 @@ const reverseList = function(head) {
 ```
 
 - [字典树](https://leetcode-cn.com/problems/implement-trie-prefix-tree/)
-``` bash
+``` js
 class Trie {
   constructor() {
     this.tries = {}
@@ -364,7 +364,7 @@ class Trie {
 ```
 
 - [给定数值的最小字符串](https://leetcode-cn.com/problems/smallest-string-with-a-given-numeric-value/)
-``` bash
+``` js
 const getSmallestString = function(n, k) {
   let str = ''
   for (let i = n; i > 0; i--) {
@@ -382,7 +382,7 @@ const getSmallestString = function(n, k) {
 ```
 
 - [反转二叉树](https://leetcode-cn.com/problems/invert-binary-tree/)
-``` bash
+``` js
 const invertTree = function(root) {
   if (!root) return root
   const { left, right } = root
@@ -396,7 +396,7 @@ const invertTree = function(root) {
 ```
 
 - [斐波那契额数列](https://leetcode-cn.com/problems/fibonacci-number/)
-``` bash
+``` js
 const fib = function(n) {
   if (n < 2) return n
   let sum = 1
@@ -412,14 +412,14 @@ const fib = function(n) {
 ```
 
 - [数组中的第K个最大元素](https://leetcode-cn.com/problems/kth-largest-element-in-an-array/)
-``` bash
+``` js
 const findKthLargest = function(nums, k) {
   return nums.sort((a, b) => b - a)[k - 1]
 }
 ```
 
 - [字符的最短距离](https://leetcode-cn.com/problems/shortest-distance-to-a-character/)
-``` bash
+``` js
 const shortestToChar = function(s, c) {
   const answer = [];
   const cArr = [];
@@ -441,7 +441,7 @@ const shortestToChar = function(s, c) {
 ```
 
 - [判断一个链表是否为回文链表](https://leetcode-cn.com/problems/palindrome-linked-list/)
-``` bash
+``` js
 const isPalindrome = function(head) {
   if(!head) return false
   const list = []
@@ -460,7 +460,7 @@ const isPalindrome = function(head) {
 ```
 
 - [最长连续递增序列](https://leetcode-cn.com/problems/longest-continuous-increasing-subsequence/)
-``` bash
+``` js
 const findLengthOfLCIS = function(nums) {
     let s = 0
     let max = 0
@@ -474,8 +474,19 @@ const findLengthOfLCIS = function(nums) {
 };
 ```
 
+- [路径总和](https://leetcode-cn.com/problems/path-sum/)
+``` js
+var hasPathSum = function(root, targetSum) {
+    if (root === null) return false
+    if (root.left === null && root.right === null) {
+        return root.val === targetSum
+    }
+    return hasPathSum(root.left, targetSum - root.val) || hasPathSum(root.right, targetSum - root.val)
+};
+```
+
 ### 加减乘除
-``` bash
+``` js
 // 获取小数个数
 function getDecimalsLength (val) {
   let curVal
@@ -534,6 +545,28 @@ export function MathDiv (a, b) {
     (d = Number(b.toString().replace('.', ''))),
     MathMul(c / d, Math.pow(10, f - e))
   )
+}
+```
+
+### 大数相加
+
+``` js
+function add(a, b) {
+  const maxLength = Math.max(a.length, b.length)
+  a = a.padStart(maxLength, '0')
+  b = b.padStart(maxLength, '0')
+  let t = 0
+  let f = 0 // 进位
+  let sum = ''
+  for (let i = a.length - 1; i >= 0; i--) {
+    t = parseInt(a[i]) + parseInt(b[i]) + f
+    f = Math.floor(t / 10)
+    sum = t % 10 + sum
+  }
+  if (f === 1) {
+    sum = '1' + sum
+  }
+  return sum
 }
 ```
 

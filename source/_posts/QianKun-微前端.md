@@ -35,12 +35,12 @@ tags:
 #### 主应用
 
 1. 安装 qiankun
-``` bash
+``` js
 $ yarn add qiankun # 或者 npm i qiankun -S
 ```
 
 2. 在主应用中注册微应用
-``` bash
+``` js
 import { registerMicroApps, start } from 'qiankun';
 registerMicroApps([
   {
@@ -61,7 +61,7 @@ start();
 当微应用信息注册完之后，一旦浏览器的 url 发生变化，便会自动触发 qiankun 的匹配逻辑，所有 activeRule 规则匹配上的微应用就会被插入到指定的 container 中，同时依次调用微应用暴露出的生命周期钩子。
 
 如果微应用不是直接跟路由关联的时候，你也可以选择手动加载微应用的方式：
-``` bash
+``` js
 import { loadMicroApp } from 'qiankun';
 loadMicroApp(
   { 
@@ -78,7 +78,7 @@ loadMicroApp(
 1. 导出相应的生命周期钩子
 
 微应用需要在自己的入口 js (通常就是你配置的 webpack 的 entry js) 导出 bootstrap、mount、unmount 三个生命周期钩子，以供主应用在适当的时机调用。
-``` bash
+``` js
 /**
  * bootstrap 只会在微应用初始化的时候调用一次，下次微应用重新进入时会直接调用 mount 钩子，不会再重复触发 bootstrap。
  * 通常我们可以在这里做一些全局变量的初始化，比如不会在 unmount 阶段被销毁的应用级别的缓存等。
@@ -109,7 +109,7 @@ export async function update(props) {
 除了代码中暴露出相应的生命周期钩子之外，为了让主应用能正确识别微应用暴露出来的一些信息，微应用的打包工具需要增加如下配置：
 
 webpack:
-``` bash
+``` js
 const packageName = require('./package.json').name;
 module.exports = {
   output: {

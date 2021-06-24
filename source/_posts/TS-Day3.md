@@ -7,7 +7,7 @@ tags:
 ## 类
 1. 声明与创建
 <!-- more -->
-``` bash
+``` js
 class Person {
   public sex: string
   protected name: string // 受保护属性，只能在类“Person”及其子类中访问
@@ -28,7 +28,7 @@ person.sayHello() // hello
 ```
 
 2. 继承与重写
-``` bash
+``` js
 class Nan extends Person {
   public height: number
 
@@ -54,7 +54,7 @@ nan.sayHello() //hello world
 ```
 
 ## 接口
-``` bash
+``` js
 interface Cat {
   name?: string,
   pinzhong: string,
